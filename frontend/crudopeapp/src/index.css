@@ -1,13 +1,185 @@
 body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+.login-container {
+  width: 100%;
+  max-width: 400px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  align-items: center;
 }
+
+.input-container {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #a6d87a;
+  color:black;
+  font-weight: bold;
+}
+
+.forgot-password-link,
+.signup-link {
+  margin-top: 10px;
+}
+
+a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* signup */
+.signup-container {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+ 
+}
+
+.signup-label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.signup-input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+.signup-file-input {
+  margin-bottom: 10px;
+}
+
+.signup-button {
+  background-color: #3498db;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-left: 100px;
+}
+
+
+.signup-button:hover {
+  background-color:rgb(154, 245, 245); /* Change this to your desired hover background color */
+  
+}
+
+.signup_links {
+  color:white; 
+  text-decoration: none; 
+ } 
+
+.signup_links:hover {
+  text-decoration: none; /* Remove default underline for Link on hover */
+  color: black;
+}
+
+/* UserList.css */
+
+.user_table {
+  max-width: 800px;
+  margin: auto;
+}
+h2{
+  text-align: center;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #f7f7f7;
+}
+
+th, td {
+  padding: 12px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: black;
+  font-weight: bold;
+}
+th:hover{
+  background-color: #123d59;
+}
+
+.user-photo {
+  width: 50px;
+  height: 50px;
+  
+}
+
+.edit-button,
+.delete-button {
+  cursor: pointer;
+  background-color: #3498db;
+  color: black;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-right: 5px;
+ font-weight: bold;
+}
+
+.edit-button:hover
+{
+  background-color: #123d59;
+}
+.delete-button:hover {
+   background-color: crimson;
+}
+
+
+
+
