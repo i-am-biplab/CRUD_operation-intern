@@ -14,6 +14,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 
+// Route to signup the user
 app.post("/signup", async (req, res) => {
     try {
         const password = req.body.password;
@@ -76,6 +77,7 @@ app.post("/signup", async (req, res) => {
     }
 });
 
+// Route to login the user
 app.post("/login", async (req, res) => {
     try {
         const email = req.body.email;
@@ -119,10 +121,11 @@ app.post("/login", async (req, res) => {
     }
 });
 
+// Route to get products based on user's uid
 app.get("/products", verifyToken, (req, res) => {
     const uid = req.uid;
 
-    const fetchDataQuery = "SELECT * FROM products WHERE uid = ? AND isactive = 'y'";
+    const fetchDataQuery = "SELECT pid, product FROM products WHERE uid = ? AND isactive = 'y'";
     const value = [uid];
     sqldb.query(fetchDataQuery, value, (err, results) => {
         if (err) {
@@ -133,6 +136,7 @@ app.get("/products", verifyToken, (req, res) => {
     });
 });
 
+// Route to add products for a user
 app.post("/products", verifyToken, (req, res) => {
     const uid = req.uid;
     const product = req.body.product;
@@ -151,6 +155,47 @@ app.post("/products", verifyToken, (req, res) => {
         }
 
         res.json({ message: "Product added successfully" });
+    });
+});
+
+// Route to update a product for a user
+app.put("/products/:productId", verifyToken, (req, res) => {
+    const uid = req.uid;
+    const productId = req.params.productId;
+    const updatedProduct = req.body.product;
+
+    if (!updatedProduct) {
+        return res.status(400).json({ error: "Product is required in the request body" });
+    }
+
+    const updateProductQuery = "UPDATE products SET product = ? WHERE uid = ? AND pid = ?";
+    const values = [updatedProduct, uid, productId];
+
+    sqldb.query(updateProductQuery, values, (err, results) => {
+        if (err) {
+            console.error("Error executing MySQL query:", err);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+
+        res.json({ message: "Product updated successfully" });
+    });
+});
+
+// Route to "soft delete" a product (set isactive to 'n')
+app.delete("/products/:productId", verifyToken, (req, res) => {
+    const uid = req.uid;
+    const productId = req.params.productId;
+
+    const softDeleteQuery = "UPDATE products SET isactive = 'n' WHERE uid = ? AND pid = ?";
+    const values = [uid, productId];
+
+    sqldb.query(softDeleteQuery, values, (err, results) => {
+        if (err) {
+            console.error("Error executing MySQL query:", err);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+
+        res.json({ message: "Product deleted successfully" });
     });
 });
 
