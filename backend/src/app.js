@@ -3,6 +3,7 @@ const sqldb = require("./db/conn");
 const express = require("express");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const verifyToken = require("./middleware/verifyToken");
 
 const port = process.env.PORT || 8000;
 
@@ -115,6 +116,22 @@ app.post("/login", async (req, res) => {
         res.status(500).send("Internal Server Error");
     }
 });
+
+app.get("/products", verifyToken, (req, res) => {
+    const uid = req.uid;
+
+    const fetchDataQuery = "SELECT * FROM products WHERE uid = ?";
+    const value = [uid];
+    sqldb.query(fetchDataQuery, value, (err, results) => {
+        if (err) {
+            console.error("Error executing MySQL query:", err);
+            return res.status(500).json({ error: "Internal Server Error" });
+        }
+        res.json({ products: results });
+    });
+});
+
+// app.post("/products", (req, res) => {});
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
