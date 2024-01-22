@@ -72,21 +72,11 @@
 				"disableBodyPruning": true
 			},
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "",
+					"raw": "{\r\n    \"authToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTcwNTkyNjQyOSwiZXhwIjoxNzA2MDEyODI5fQ.atXyogWkNb7m4MnjcfPFfOkRR32QC19ae6t7_E0z3IY\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -112,21 +102,11 @@
 		{
 			"name": "enter product",
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"product\": \"Room Heater\"\r\n}",
+					"raw": "{\r\n    \"authToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTcwNTkyNjQyOSwiZXhwIjoxNzA2MDEyODI5fQ.atXyogWkNb7m4MnjcfPFfOkRR32QC19ae6t7_E0z3IY\",\r\n    \"product\": \"Room Heater\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -152,21 +132,11 @@
 		{
 			"name": "update product",
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
 				"method": "PUT",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"product\": \"Room Cooler & Heater\"\r\n}",
+					"raw": "{\r\n    \"authToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTcwNTkyNjQyOSwiZXhwIjoxNzA2MDEyODI5fQ.atXyogWkNb7m4MnjcfPFfOkRR32QC19ae6t7_E0z3IY\",\r\n    \"product\": \"Room Cooler & Heater\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -193,18 +163,17 @@
 		{
 			"name": "delete product",
 			"request": {
-				"auth": {
-					"type": "bearer",
-					"bearer": [
-						{
-							"key": "token",
-							"value": "{{token}}",
-							"type": "string"
-						}
-					]
-				},
 				"method": "DELETE",
 				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"authToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTcwNTkyNjQyOSwiZXhwIjoxNzA2MDEyODI5fQ.atXyogWkNb7m4MnjcfPFfOkRR32QC19ae6t7_E0z3IY\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
 				"url": {
 					"raw": "127.0.0.1:8000/products/1",
 					"host": [
@@ -217,6 +186,36 @@
 					"path": [
 						"products",
 						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "token validate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"authToken\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1aWQiOjEsImlhdCI6MTcwNTkyNjQyOSwiZXhwIjoxNzA2MDEyODI5fQ.atXyogWkNb7m4MnjcfPFfOkRR32QC19ae6t7_E0z3IY\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "127.0.0.1:8000/tokenvalidate",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"tokenvalidate"
 					]
 				}
 			},
