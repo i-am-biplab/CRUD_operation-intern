@@ -1,6 +1,7 @@
 require('dotenv').config();
 const sqldb = require("./db/conn");
 const express = require("express");
+const cors = require('cors');
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
@@ -10,6 +11,8 @@ const port = process.env.PORT || 8000;
 
 const app = express();
 
+// Enable CORS for all routes
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
@@ -27,12 +30,13 @@ app.post("/signup", async (req, res) => {
         sqldb.query(checkEmailQuery, checkEmailValues, async (err, result) => {
             if (err) {
                 console.log("Error while querying the data: ", err);
-                res.status(500).send("Internal Server Error");
+                res.status(500).json({"error": "Internal Server Error"});
                 return;
             }
 
             if (result.length > 0) {
                 res.send("Email already registered");
+                res.status(409).json({"message": "Email already registered"});
             } else {
                 if (password === cpassword) {
                     const firstname = req.body.firstname;
@@ -45,7 +49,7 @@ app.post("/signup", async (req, res) => {
                     sqldb.query(insertDataQuery, insertDataValues, (err, result) => {
                         if (err) {
                             console.log("Error while inserting the data: ", err);
-                            res.status(500).send("Internal Server Error");
+                            res.status(500).json({"error": "Internal Server Error"});
                             return;
                         }
 
@@ -55,7 +59,7 @@ app.post("/signup", async (req, res) => {
                         sqldb.query(getUserUidQuery, getUserUidValues, (err, result) => {
                             if (err) {
                                 console.log("Error while querying the data: ", err);
-                                res.status(500).send("Internal Server Error");
+                                res.status(500).json({"error": "Internal Server Error"});
                                 return;
                             }
 
@@ -63,17 +67,19 @@ app.post("/signup", async (req, res) => {
                             const token = jwt.sign({ uid: userUid }, process.env.SECRET_KEY, { expiresIn: "1d" });
                             console.log(token);
 
-                            res.send("Signed Up Successfully");
+                            res.status(201).json({"status": true, 
+                                                    "message": "Signed Up Successfully",
+                                                    "token": token});
                         });
                     });
                 } else {
-                    res.send("Password not matching");
+                    res.status(401).json({"message": "Password not matching"});
                 }
             }
         });
     } catch (err) {
         console.log("Unexpected error: ", err);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({"error": "Internal Server Error"});
     }
 });
 
@@ -88,11 +94,12 @@ app.post("/login", async (req, res) => {
         sqldb.query(fetchDataQuery, value, async (err, results) => {
             if (err) {
                 console.log("Error while quering the data: ", err);
+                res.status(500).json({"error": "Internal Server Error"});
                 return;
             }
 
             if (results.length === 0) {
-                res.send("User not found");
+                res.status(404).json({"message": "User not found"});
                 return;
             }
 
@@ -106,18 +113,21 @@ app.post("/login", async (req, res) => {
                 if (isMatch) {
                     const token = jwt.sign({ uid: userUid }, process.env.SECRET_KEY, { expiresIn: "1d" });
                     console.log(token);
-                    res.send("Logged In successfully");
+                    // res.send("Logged In successfully");
+                    res.status(200).json({"status": true, 
+                                            "message": "Logged In successfully",
+                                            "token": token});
                 } else {
-                    res.send("Invalid Credentials");
+                    res.status(401).json({"message": "Invalid Credentials"});
                 }
             } catch (bcryptError) {
                 console.log("Error comparing passwords: ", bcryptError);
-                res.status(500).send("Internal Server Error");
+                res.status(500).json({"error": "Internal Server Error"});
             }
         });
     } catch (error) {
         console.log("Unexpected error: ", error);
-        res.status(500).send("Internal Server Error");
+        res.status(500).json({"error": "Internal Server Error"});
     }
 });
 
@@ -132,7 +142,7 @@ app.get("/products", verifyToken, (req, res) => {
             console.error("Error executing MySQL query:", err);
             return res.status(500).json({ error: "Internal Server Error" });
         }
-        res.json({ products: results });
+        res.json({ "products": results });
     });
 });
 
@@ -154,7 +164,7 @@ app.post("/products", verifyToken, (req, res) => {
             return res.status(500).json({ error: "Internal Server Error" });
         }
 
-        res.json({ message: "Product added successfully" });
+        res.status(201).json({ message: "Product added successfully" });
     });
 });
 
@@ -177,7 +187,7 @@ app.put("/products/:productId", verifyToken, (req, res) => {
             return res.status(500).json({ error: "Internal Server Error" });
         }
 
-        res.json({ message: "Product updated successfully" });
+        res.status(200).json({ message: "Product updated successfully" });
     });
 });
 
@@ -195,7 +205,7 @@ app.delete("/products/:productId", verifyToken, (req, res) => {
             return res.status(500).json({ error: "Internal Server Error" });
         }
 
-        res.json({ message: "Product deleted successfully" });
+        res.status(200).json({ message: "Product deleted successfully" });
     });
 });
 
