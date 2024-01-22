@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+
 import Cookies from 'js-cookie';
 
 
@@ -21,14 +22,20 @@ const Login = () => {
 
       if (response.ok) {
         // Set a cookie upon successful login
+        console.log("login successfull");
         const data = await response.json();
+        console.log('Setting authToken cookie:', data.authToken);
         Cookies.set('authToken', data.authToken);
+        window.location.href = '/userList';
+        
+
 
         // Add any other necessary logic for successful login
-        console.log('Logged in successfully');
+        // console.log('Logged in successfully');
       } else {
         // Handle authentication failure
         console.error('Login failed');
+        alert('wrong credential...');
       }
     } catch (error) {
       console.error('Error during login:', error);

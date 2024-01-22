@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./Login";
 import Signup from "./Signup";
 import UserList from "./UserList";
-import Sdata from "./Sdata";
+
 import './index.css';
 
 
