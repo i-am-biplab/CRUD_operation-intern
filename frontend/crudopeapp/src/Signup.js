@@ -17,7 +17,7 @@ const Signup = () => {
   const handleSignup = async () => {
     try {
       // Make an API call to register the new user
-      const response = await fetch('/api/signup', {
+      const response = await fetch('/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -43,8 +43,11 @@ const Signup = () => {
     <div className="signup-container">
       <h2>Signup</h2>
       <form>
-        <label className="signup-label">Name:</label>
-        <input type="text" className="signup-input" value={name} onChange={(e) => setName(e.target.value)} placeholder='fullname' />
+        <label className="signup-label">FirstName:</label>
+        <input type="text" className="signup-input" value={name} onChange={(e) => setName(e.target.value)} placeholder='firstname' />
+        <br />
+        <label className="signup-label">LastName:</label>
+        <input type="text" className="signup-input" value={name} onChange={(e) => setName(e.target.value)} placeholder='lastname' />
         <br />
         <label className="signup-label">Email:</label>
         <input type="text" className="signup-input" value={email} onChange={(e) => setEmail(e.target.value)} placeholder='exam@gmail.com'/>
@@ -60,9 +63,7 @@ const Signup = () => {
           onChange={(e) => setConfirmPassword(e.target.value)}
           placeholder='confirmpassword'
         />
-        <br />
-        <input type="file" className="signup-file-input" onChange={handleFileChange} />
-        <br />
+        
         <button type="button" className="signup-button" > 
         <Link to="/userlist" className="signup_links" onClick={handleSignup}>
           Signup</Link>
