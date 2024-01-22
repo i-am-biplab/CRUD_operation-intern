@@ -17,6 +17,36 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(cookieParser());
 
+app.post("/tokenvalidate", (req, res) => {
+    const token = req.body.authToken;
+
+    if (!token) {
+        return res.status(403).json({"status": false, error: "No Token Found" });
+    }
+
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        if (err) {
+            return res.status(403).json({"status": false, error: "Token Verification Error" });
+        }
+
+        const uid = decoded.uid;
+
+        const fetchDataQuery = "SELECT uid FROM users WHERE uid = ?";
+        const value = [uid];
+        sqldb.query(fetchDataQuery, value, (err, results) => {
+            if (err) {
+                console.error("Error while querying the data:", err);
+                return res.status(500).json({ error: "Internal Server Error" });
+            }
+        
+            if (results.length === 0) {
+                return res.status(500).json({ error: "User not found in the database" });
+            }
+            res.status(200).json({"status": true, "message": "Authorized User"});
+        });
+    });
+});
+
 // Route to signup the user
 app.post("/signup", async (req, res) => {
     try {
