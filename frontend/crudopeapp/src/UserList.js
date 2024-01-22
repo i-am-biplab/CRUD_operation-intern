@@ -3,7 +3,7 @@ import Sdata from './Sdata';
 
 const UserList = () => {
     const [data , setData]= useState([]);
-    const [fullname, setFullName]= useState('');
+    const [product, setProductName]= useState('');
     const [id, setId] = useState(0);
     const [isUpdate, setIsUpdate]= useState(false);
 
@@ -17,7 +17,7 @@ const UserList = () => {
         {
             setIsUpdate(true);
             setId(userId);
-            setFullName(dt[0].fullname);
+            setProductName(dt[0].product);
         }
     };
 
@@ -36,7 +36,7 @@ const UserList = () => {
         const dt = [...data];
         const newObject ={
             id: Sdata.length + 1,
-            fullname: fullname,
+            product: product,
         }
         dt.push( newObject);
         setData(dt);
@@ -49,7 +49,7 @@ const UserList = () => {
         
         
         const dt = [...data];
-        dt[index].fullname = fullname;
+        dt[index].product = product;
 
         setData(dt);
         handleClear();
@@ -59,7 +59,7 @@ const UserList = () => {
 
     const handleClear = () =>{
         setId(0);
-        setFullName('');
+        setProductName('');
         setIsUpdate(false);
 
     };
@@ -69,8 +69,8 @@ const UserList = () => {
 {/* edit */}
 <div className='edit_data'>
       <div>
-        <label>Editname:
-          <input type='text' placeholder='enter the name' value={fullname} onChange={(e) => setFullName(e.target.value)}/>
+        <label>Edit product:
+          <input type='text' placeholder='enter the product name' value={product} onChange={(e) => setProductName(e.target.value)}/>
         </label>
       </div>
     <div>
@@ -91,13 +91,13 @@ const UserList = () => {
   
   {/* userlist */}
       <div className='user_table'>
-      <h2>Contact List</h2>
+      <h2>Product List</h2>
         <table>
             <thead>
                 <tr>
                   <th className="serial-no">Serial No</th>
-                  <th className="user-name">Name</th>
-                  <th className="user-photo">Photo</th>
+                  <th className="user-name">Product</th>
+                  
                   <th className="edit-delete-buttons">Actions</th>
                 </tr>
             </thead>
@@ -105,10 +105,8 @@ const UserList = () => {
              {data.map((user, index) => (
                <tr key={user.id}>
                 <td>{index + 1}</td>
-                 <td>{user.fullname}</td>
-                <td>
-                <img src={user.imgsrc} alt={user.fullname} className="user-photo" />
-              </td>
+                 <td>{user.product}</td>
+                
               <td>
                   <div className="edit-delete-buttons">
                     <button className="edit-button" onClick={()=>handleEdit(user.id)}>Edit</button>

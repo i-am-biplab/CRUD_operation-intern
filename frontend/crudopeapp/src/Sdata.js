@@ -1,39 +1,39 @@
 const Sdata =[
     {
         id: 1,
-        fullname:'poulami kayal',
-        imgsrc:'',
+        product:'poulami',
+        
         
 
     },
 
     {
         id: 2,
-        fullname:'noddy ghosh',
-        imgsrc:'',
+        product:'noddy',
+        
         
         
     },
 
     {
         id: 3,
-        fullname:'schinchan das',
-        imgsrc:'',
+        product:'schinchan',
+        
         
     },
 
     {
         id: 4,
-        fullname:'dorry kayal',
-        imgsrc:'',
+        product:'dorry',
+       
         
         
     },
 
     {
         id: 5,
-        fullname:'nobita mondal',
-        imgsrc:'',
+        product:'nobita',
+       
         
         
     },
