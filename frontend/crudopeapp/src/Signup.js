@@ -4,7 +4,8 @@ import { Link } from 'react-router-dom';
 
 
 const Signup = () => {
-  const [name, setName] = useState('');
+  const [fname, setFName] = useState('');
+  const [lname, setLName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -17,12 +18,12 @@ const Signup = () => {
   const handleSignup = async () => {
     try {
       // Make an API call to register the new user
-      const response = await fetch('/signup', {
+      const response = await fetch('http://127.0.0.1:8000/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name, email, password, confirmPassword }),
+        body: JSON.stringify({ fname, lname, email, password, confirmPassword }),
       });
 
       if (response.ok) {
@@ -30,6 +31,7 @@ const Signup = () => {
 
         // For example, you might want to redirect the user to the login page
         console.log('User registered successfully');
+        redirectToUserListPage();
       } else {
         // Registration failed, handle error
         console.error('User registration failed');
@@ -39,15 +41,19 @@ const Signup = () => {
     }
   };
 
+  const redirectToUserListPage = () => {
+    window.location.href = '/userList';
+  };
+
   return (
     <div className="signup-container">
       <h2>Signup</h2>
       <form>
         <label className="signup-label">FirstName:</label>
-        <input type="text" className="signup-input" value={name} onChange={(e) => setName(e.target.value)} placeholder='firstname' />
+        <input type="text" className="signup-input" value={fname} onChange={(e) => setFName(e.target.value)} placeholder='firstname' />
         <br />
         <label className="signup-label">LastName:</label>
-        <input type="text" className="signup-input" value={name} onChange={(e) => setName(e.target.value)} placeholder='lastname' />
+        <input type="text" className="signup-input" value={lname} onChange={(e) => setLName(e.target.value)} placeholder='lastname' />
         <br />
         <label className="signup-label">Email:</label>
         <input type="text" className="signup-input" value={email} onChange={(e) => setEmail(e.target.value)} placeholder='exam@gmail.com'/>
@@ -64,9 +70,8 @@ const Signup = () => {
           placeholder='confirmpassword'
         />
         
-        <button type="button" className="signup-button" > 
-        <Link to="/userlist" className="signup_links" onClick={handleSignup}>
-          Signup</Link>
+        <button type="button" className="signup-button" onClick={handleSignup}> 
+        <span className="signup_links">Signup</span>
         </button>
       </form>
     </div>

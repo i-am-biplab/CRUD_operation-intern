@@ -3,6 +3,10 @@ import { Link } from 'react-router-dom';
 
 import Cookies from 'js-cookie';
 
+const getAuthToken = () => {
+  return Cookies.get('authToken');
+};
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -11,7 +15,7 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      // Make an API call to authenticate the user
+      
       const response = await fetch('http://127.0.0.1:8000/login', {
         method: 'POST',
         headers: {
@@ -19,14 +23,18 @@ const Login = () => {
         },
         body: JSON.stringify({ email, password }),
       });
-
       if (response.ok) {
         // Set a cookie upon successful login
         console.log("login successfull");
         const data = await response.json();
-        console.log('Setting authToken cookie:', data.authToken);
-        Cookies.set('authToken', data.authToken);
-        window.location.href = '/userList';
+        console.log('Setting authToken cookie:', data.token);
+        
+        console.log(data.token);
+       
+        Cookies.set('authToken', data.token);
+
+
+        // window.location.href = '/userList';
         
 
 
@@ -42,9 +50,8 @@ const Login = () => {
     }
   };
 
-
-
-  return (
+  
+return (
     <div className="login-container">
       <h2>Login</h2>
       <div className="input-container">
@@ -75,6 +82,7 @@ const Login = () => {
     </div>
   );
 };
+
 
 
 export default Login;

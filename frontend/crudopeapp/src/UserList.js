@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Sdata from './Sdata';
 
+
 const UserList = () => {
     const [data , setData]= useState([]);
     const [product, setProductName]= useState('');
     const [id, setId] = useState(0);
     const [isUpdate, setIsUpdate]= useState(false);
+    
 
     useEffect(()=>{
         setData(Sdata)
@@ -53,9 +55,7 @@ const UserList = () => {
 
         setData(dt);
         handleClear();
-        
-       
-    };
+      };
 
     const handleClear = () =>{
         setId(0);
@@ -81,8 +81,6 @@ const UserList = () => {
         <button className="edit-button" onClick={()=>handleUpdate()}>Update</button>
 
     }
-      
-      
       <button className="delete-button" onClick={() => handleClear()}>Clear</button>
       </div>
 
@@ -121,6 +119,8 @@ const UserList = () => {
         </table>
 
       </div>
+
+      
     </>
   );
 };
