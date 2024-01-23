@@ -199,7 +199,7 @@ app.post("/products/addnew", verifyToken, (req, res) => {
 });
 
 // Route to update a product for a user
-app.put("/products/:productId", verifyToken, (req, res) => {
+app.post("/products/update/:productId", verifyToken, (req, res) => {
     const uid = req.uid;
     const productId = req.params.productId;
     const updatedProduct = req.body.product;
@@ -222,7 +222,7 @@ app.put("/products/:productId", verifyToken, (req, res) => {
 });
 
 // Route to "soft delete" a product (set isactive to 'n')
-app.delete("/products/:productId", verifyToken, (req, res) => {
+app.post("/products/delete/:productId", verifyToken, (req, res) => {
     const uid = req.uid;
     const productId = req.params.productId;
 
