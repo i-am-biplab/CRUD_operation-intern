@@ -194,7 +194,7 @@ app.post("/products/addnew", verifyToken, (req, res) => {
             return res.status(500).json({ error: "Internal Server Error" });
         }
 
-        res.status(201).json({ message: "Product added successfully" });
+        res.status(201).json({"isadded": true, "message": "Product added successfully" });
     });
 });
 
@@ -217,7 +217,7 @@ app.post("/products/update/:productId", verifyToken, (req, res) => {
             return res.status(500).json({ error: "Internal Server Error" });
         }
 
-        res.status(200).json({ message: "Product updated successfully" });
+        res.status(200).json({"isupdated": true, "message": "Product updated successfully" });
     });
 });
 
@@ -235,7 +235,7 @@ app.post("/products/delete/:productId", verifyToken, (req, res) => {
             return res.status(500).json({ error: "Internal Server Error" });
         }
 
-        res.status(200).json({ message: "Product deleted successfully" });
+        res.status(200).json({"isdeleted": true, "message": "Product deleted successfully" });
     });
 });
 
