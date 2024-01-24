@@ -21,12 +21,12 @@ app.post("/tokenvalidate", (req, res) => {
     const token = req.body.authToken;
 
     if (!token) {
-        return res.status(403).json({"status": false, error: "No Token Found" });
+        return res.status(403).json({"isvalid": false, error: "No Token Found" });
     }
 
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
         if (err) {
-            return res.status(403).json({"status": false, error: "Token Verification Error" });
+            return res.status(403).json({"isvalid": false, error: "Token Verification Error" });
         }
 
         const uid = decoded.uid;
@@ -42,7 +42,7 @@ app.post("/tokenvalidate", (req, res) => {
             if (results.length === 0) {
                 return res.status(500).json({ error: "User not found in the database" });
             }
-            res.status(200).json({"status": true, "message": "Authorized User"});
+            res.status(200).json({"isvalid": true, "message": "Authorized User"});
         });
     });
 });
@@ -97,7 +97,7 @@ app.post("/signup", async (req, res) => {
                             const token = jwt.sign({ uid: userUid }, process.env.SECRET_KEY, { expiresIn: "1d" });
                             console.log(token);
 
-                            res.status(201).json({"status": true, 
+                            res.status(201).json({"issignedup": true, 
                                                     "message": "Signed Up Successfully",
                                                     "token": token});
                         });
@@ -144,7 +144,7 @@ app.post("/login", async (req, res) => {
                     const token = jwt.sign({ uid: userUid }, process.env.SECRET_KEY, { expiresIn: "1d" });
                     console.log(token);
                     // res.send("Logged In successfully");
-                    res.status(200).json({"status": true, 
+                    res.status(200).json({"isloggedin": true, 
                                             "message": "Logged In successfully",
                                             "token": token});
                 } else {
@@ -162,7 +162,7 @@ app.post("/login", async (req, res) => {
 });
 
 // Route to get products based on user's uid
-app.get("/products", verifyToken, (req, res) => {
+app.post("/products", verifyToken, (req, res) => {
     const uid = req.uid;
 
     const fetchDataQuery = "SELECT pid, product FROM products WHERE uid = ? AND isactive = 'y'";
@@ -177,7 +177,7 @@ app.get("/products", verifyToken, (req, res) => {
 });
 
 // Route to add products for a user
-app.post("/products", verifyToken, (req, res) => {
+app.post("/products/addnew", verifyToken, (req, res) => {
     const uid = req.uid;
     const product = req.body.product;
 
@@ -194,12 +194,12 @@ app.post("/products", verifyToken, (req, res) => {
             return res.status(500).json({ error: "Internal Server Error" });
         }
 
-        res.status(201).json({ message: "Product added successfully" });
+        res.status(201).json({"isadded": true, "message": "Product added successfully" });
     });
 });
 
 // Route to update a product for a user
-app.put("/products/:productId", verifyToken, (req, res) => {
+app.post("/products/update/:productId", verifyToken, (req, res) => {
     const uid = req.uid;
     const productId = req.params.productId;
     const updatedProduct = req.body.product;
@@ -217,12 +217,12 @@ app.put("/products/:productId", verifyToken, (req, res) => {
             return res.status(500).json({ error: "Internal Server Error" });
         }
 
-        res.status(200).json({ message: "Product updated successfully" });
+        res.status(200).json({"isupdated": true, "message": "Product updated successfully" });
     });
 });
 
 // Route to "soft delete" a product (set isactive to 'n')
-app.delete("/products/:productId", verifyToken, (req, res) => {
+app.post("/products/delete/:productId", verifyToken, (req, res) => {
     const uid = req.uid;
     const productId = req.params.productId;
 
@@ -235,7 +235,7 @@ app.delete("/products/:productId", verifyToken, (req, res) => {
             return res.status(500).json({ error: "Internal Server Error" });
         }
 
-        res.status(200).json({ message: "Product deleted successfully" });
+        res.status(200).json({"isdeleted": true, "message": "Product deleted successfully" });
     });
 });
 
