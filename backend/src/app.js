@@ -172,7 +172,7 @@ app.post("/products", verifyToken, (req, res) => {
             console.error("Error executing MySQL query:", err);
             return res.status(500).json({ error: "Internal Server Error" });
         }
-        res.json({ "products": results });
+        res.json({"isvalid": req.isvalid, "message": req.message, "products": results });
     });
 });
 

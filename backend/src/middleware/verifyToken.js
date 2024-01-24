@@ -7,13 +7,17 @@ const sqldb = require("../db/conn");
 // const verifyToken = (req, res, next) => {
 //     let token;
 //     const {authorization} = req.headers;
+//     console.log(authorization);
 
 //     try{
 //         if(authorization && authorization.startsWith('Bearer')){
 //             token=authorization.split(' ')[1];
+//             if (!token) {
+//                 return res.status(403).json({"isvalid": false, error: "No Token Found" });
+//             }
 //             jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
 //                 if (err) {
-//                     return res.status(403).json({ error: "Unauthorized" });
+//                     return res.status(403).json({"isvalid": false, error: "Token Verification Error" });
 //                 }
         
 //                 const uid = decoded.uid;
@@ -30,8 +34,10 @@ const sqldb = require("../db/conn");
 //                         return res.status(500).json({ error: "User not found in the database" });
 //                     }
         
-//                     req.uid = decoded.uid;
-//                     next();
+//                    req.uid = decoded.uid;
+//                    req.isvalid = true;
+//                    req.message = "Authorized User";
+//                    next();
 //                 });
 //             });
 //         }
@@ -46,12 +52,12 @@ const verifyToken = (req, res, next) => {
     const token = req.body.authToken;
 
     if (!token) {
-        return res.status(403).json({ error: "No Token Found" });
+        return res.status(403).json({"isvalid": false, error: "No Token Found" });
     }
 
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
         if (err) {
-            return res.status(403).json({ error: "Token Verification Error" });
+            return res.status(403).json({"isvalid": false, error: "Token Verification Error" });
         }
 
         const uid = decoded.uid;
@@ -69,6 +75,8 @@ const verifyToken = (req, res, next) => {
             }
 
             req.uid = decoded.uid;
+            req.isvalid = true;
+            req.message = "Authorized User";
             next();
         });
     });
