@@ -1,128 +1,221 @@
 import React, { useEffect, useState } from 'react';
-import Sdata from './Sdata';
-
+import Cookies from 'js-cookie';
 
 const UserList = () => {
-    const [data , setData]= useState([]);
-    const [product, setProductName]= useState('');
+    const [data, setData] = useState([]);
+    const [product, setProductName] = useState('');
     const [id, setId] = useState(0);
-    const [isUpdate, setIsUpdate]= useState(false);
+    const [isUpdate, setIsUpdate] = useState(false);
+    const [isReload, setIsReload] = useState(false);
+
     
-
-    useEffect(()=>{
-        setData(Sdata)
-    },[]);
-
-    const handleEdit= (userId) => {
-        const dt = data.filter(user => user.id === userId);
-        if(dt !== undefined)
-        {
+    const handleEdit = (userId) => {
+        console.log('====================================');
+        console.log("userId ",userId);
+        console.log('====================================');
+        const dt = data.find(user => user.pid === userId);
+        if (dt !== undefined) {
             setIsUpdate(true);
             setId(userId);
-            setProductName(dt[0].product);
+            setProductName(dt.product);
         }
     };
 
-    const handleDelete = (userId) => {
-        if(userId > 0)
-        {
-        const dt = data.filter(user => user.id !== userId);
-        setData(dt);
+    
+    
+    const handleDelete = async (userId) => {
+        try {
+            if (userId > 0) {
+                // Make API call to delete data
+                const authToken = Cookies.get('authToken');
+                const response = await fetch(`http://127.0.0.1:8000/products/delete/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        authToken: authToken,
+                    }),
+                });
+    
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+    
+                // Assuming the API returns some data after deletion
+                const apiData = await response.json();
+    
+                console.log('API Data:', apiData);
+    
+                // Assuming apiData.delete is the correct property, adjust accordingly
+                setData(apiData || apiData); 
+                setIsReload(!isReload)
+            }
+        } catch (error) {
+            console.error('Error deleting data:', error);
         }
-      };
-
-// edit
-       
-    const handleSave = (e) =>{
+    };
+    
+    const handleSave = (e) => {
         e.preventDefault();
-        const dt = [...data];
-        const newObject ={
-            id: Sdata.length + 1,
-            product: product,
-        }
-        dt.push( newObject);
-        setData(dt);
+        
+        const authToken = Cookies.get('authToken');
+        const apiUrl = 'http://127.0.0.1:8000/products/addnew';
+    
+        fetch(apiUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                authToken: authToken,
+                product: product,
+            }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(apiData => {
+            setData(apiData.product);
+            setIsReload(!isReload)
+            // Additional logic if needed
+        })
+        .catch(error => console.error('Error saving data:', error));
     };
-
-    const handleUpdate = () =>{
-        const index = data.map((user)=>{
-            return user.id
-        }).indexOf(id);
         
+    const handleUpdate = () => {
+        // Make API call to update data
+        const authToken = Cookies.get('authToken');
         
-        const dt = [...data];
-        dt[index].product = product;
-
-        setData(dt);
+        fetch(`http://127.0.0.1:8000/products/update/${id}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                authToken: authToken,
+                product: product,
+            }),
+        })
+        .then(response => response.json())
+        .then(apiData => {
+            console.log('====================================');
+            console.log(apiData);
+            console.log('====================================');
+            setData(apiData);
+            setIsReload(!isReload)
+        })
+        .catch(error => console.error('Error updating data:', error));
+    
         handleClear();
-      };
-
-    const handleClear = () =>{
+    };
+    const handleClear = () => {
         setId(0);
         setProductName('');
         setIsUpdate(false);
-
     };
 
-  return (
-   <>
-{/* edit */}
-<div className='edit_data'>
-      <div>
-        <label>Edit product:
-          <input type='text' placeholder='enter the product name' value={product} onChange={(e) => setProductName(e.target.value)}/>
-        </label>
-      </div>
-    <div>
-    {
-        !isUpdate ? 
-        <button className="edit-button" onClick={(e)=>handleSave(e)}>Save</button>
-        :
-        <button className="edit-button" onClick={()=>handleUpdate()}>Update</button>
 
-    }
-      <button className="delete-button" onClick={() => handleClear()}>Clear</button>
-      </div>
 
-</div>
-     
-  
-  {/* userlist */}
-      <div className='user_table'>
-      <h2>Product List</h2>
-        <table>
-            <thead>
-                <tr>
-                  <th className="serial-no">Serial No</th>
-                  <th className="user-name">Product</th>
-                  
-                  <th className="edit-delete-buttons">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-             {data.map((user, index) => (
-               <tr key={user.id}>
-                <td>{index + 1}</td>
-                 <td>{user.product}</td>
+    useEffect(() => {
+
+        // const authToken = Cookies.get('authToken');
+        // console.log("authToken",authToken);
+
+
+        const fetchData = async () => {
+            try {
+                const authToken = Cookies.get('authToken');
+                 
+                const response = await fetch('http://127.0.0.1:8000/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        authToken: authToken,
+                    }),
+                });
                 
-              <td>
-                  <div className="edit-delete-buttons">
-                    <button className="edit-button" onClick={()=>handleEdit(user.id)}>Edit</button>
-                    <button className="delete-button" onClick={() => handleDelete(user.id)}>
-                      Delete
-                    </button>
-                  </div>
-                </td>
-            </tr>
-          ))}
-            </tbody>
-        </table>
+              console.log(response);
+                
 
-      </div>
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
 
-      
-    </>
-  );
+                const apiData = await response.json();
+                setData(apiData.products);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+        fetchData();
+    }, [isReload]);
+    
+
+    
+    
+    return (
+        <>
+            {/* edit */}
+            <div className='edit_data'>
+                <div>
+                    <label>Edit Product:
+                        <input type='text' placeholder='Enter the Product Name' value={product} onChange={(e) => setProductName(e.target.value)} />
+                    </label>
+                </div>
+                <div>
+                    {
+                        !isUpdate ?
+                            <button className="edit-button" onClick={(e) => handleSave(e)}>Save</button>
+                            :
+                            <button className="edit-button" onClick={() => handleUpdate()}>Update</button>
+                    }
+                    <button className="delete-button" onClick={() => handleClear()}>Clear</button>
+                </div>
+            </div>
+
+            {/* userlist */}
+            <div className='user_table'>
+                <h2>Product List</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th className="serial-no">Serial No</th>
+                            <th className="user-name">Product</th>
+                            <th className="edit-delete-buttons">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {Array.isArray(data) && data.length > 0 ? (
+                            data.map((user, index) => (
+                                <tr key={user.pid}>
+                                    <td>{index + 1}</td>
+                                    <td>{user.product}</td>
+                                    <td>
+                                        <div className="edit-delete-buttons">
+                                            <button className="edit-button" onClick={() => handleEdit(user.pid)}>Edit</button>
+                                            <button className="delete-button" onClick={() => handleDelete(user.pid)}>Delete</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="3">Loading...</td>
+                            </tr>
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        </>
+    );
 };
 
 export default UserList;
+
+

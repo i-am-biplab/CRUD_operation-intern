@@ -1,11 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import Cookies from 'js-cookie';
 
-const getAuthToken = () => {
-  return Cookies.get('authToken');
-};
+// const getAuthToken = () => {
+//   return Cookies.get('authToken');
+// };
 
 
 const Login = () => {
@@ -23,6 +22,7 @@ const Login = () => {
         },
         body: JSON.stringify({ email, password }),
       });
+      
       if (response.ok) {
         // Set a cookie upon successful login
         console.log("login successfull");
@@ -34,10 +34,7 @@ const Login = () => {
         Cookies.set('authToken', data.token);
 
 
-        // window.location.href = '/userList';
-        
-
-
+        window.location.href = '/userList';
         // Add any other necessary logic for successful login
         // console.log('Logged in successfully');
       } else {
@@ -51,7 +48,8 @@ const Login = () => {
   };
 
   
-return (
+
+   return (
     <div className="login-container">
       <h2>Login</h2>
       <div className="input-container">

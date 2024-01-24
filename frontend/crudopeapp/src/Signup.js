@@ -1,6 +1,7 @@
 // Signup.js
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 
 const Signup = () => {
@@ -10,12 +11,18 @@ const Signup = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleFileChange = (e) => {
-    console.log('Selected file:', e.target.files[0]);
-  };
+  // const handleFileChange = (e) => {
+  //   console.log('Selected file:', e.target.files[0]);
+  // };
+
+  
 
   // Handle signup logic
   const handleSignup = async () => {
+    const confirmpassword = confirmPassword;
+    const firstname = fname;
+    const lastname = lname;
+
     try {
       // Make an API call to register the new user
       const response = await fetch('http://127.0.0.1:8000/signup', {
@@ -23,14 +30,17 @@ const Signup = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ fname, lname, email, password, confirmPassword }),
+        body: JSON.stringify({ firstname, lastname, email, password, confirmpassword }),
       });
 
       if (response.ok) {
-        // Registration successful, handle any additional logic
-
-        // For example, you might want to redirect the user to the login page
         console.log('User registered successfully');
+        const data = await response.json();
+        console.log('Setting authToken cookie:', data.token);
+        
+        console.log(data.token);
+       
+        Cookies.set('authToken', data.token);
         redirectToUserListPage();
       } else {
         // Registration failed, handle error
@@ -42,8 +52,10 @@ const Signup = () => {
   };
 
   const redirectToUserListPage = () => {
-    window.location.href = '/userList';
+    window.location.href = "/userList";
   };
+
+ 
 
   return (
     <div className="signup-container">
