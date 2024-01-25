@@ -4,6 +4,7 @@ import Cookies from 'js-cookie';
 const UserList = () => {
     const [data, setData] = useState([]);
     const [product, setProductName] = useState('');
+    const [image , setImage] =useState(null);
     const [id, setId] = useState(0);
     const [isUpdate, setIsUpdate] = useState(false);
     const [isReload, setIsReload] = useState(false);
@@ -18,6 +19,7 @@ const UserList = () => {
             setIsUpdate(true);
             setId(userId);
             setProductName(dt.product);
+            setImage();
         }
     };
 
@@ -167,6 +169,10 @@ const UserList = () => {
                     <label>Edit Product:
                         <input type='text' placeholder='Enter the Product Name' value={product} onChange={(e) => setProductName(e.target.value)} />
                     </label>
+
+                    <label>Upload Image:
+                         <input type='file' onChange={(e) => setImage(e.target.files[0])} />
+                    </label>
                 </div>
                 <div>
                     {
@@ -187,6 +193,7 @@ const UserList = () => {
                         <tr>
                             <th className="serial-no">Serial No</th>
                             <th className="user-name">Product</th>
+                            <th className="user-image">Image</th>
                             <th className="edit-delete-buttons">Actions</th>
                         </tr>
                     </thead>
@@ -197,6 +204,11 @@ const UserList = () => {
                                     <td>{index + 1}</td>
                                     <td>{user.product}</td>
                                     <td>
+                                     {user.image && (
+                                    <img src={""} alt={user.image} style={{ width: '50px', height: '50px' }} />
+                                     )}
+                                    </td>
+                                    <td>
                                         <div className="edit-delete-buttons">
                                             <button className="edit-button" onClick={() => handleEdit(user.pid)}>Edit</button>
                                             <button className="delete-button" onClick={() => handleDelete(user.pid)}>Delete</button>
@@ -206,7 +218,7 @@ const UserList = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="3">Loading...</td>
+                                <td colSpan="4">Loading...</td>
                             </tr>
                         )}
                     </tbody>
