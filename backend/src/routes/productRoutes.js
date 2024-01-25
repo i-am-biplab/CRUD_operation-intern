@@ -24,10 +24,14 @@ router.post("/products", verifyToken, (req, res) => {
 router.post("/products/addnew", verifyToken, upload.single("pic"), (req, res) => {
     const uid = req.uid;
     const product = req.body.product;
-    const filepath = req.file.path;
+    const filepath = req.file ? req.file.path : null;
 
     if (!product) {
         return res.status(400).json({ error: "Product is required in the request body" });
+    }
+
+    if (!filepath) {
+        return res.status(400).json({ error: "Image is required to upload" });
     }
 
     const insertProductQuery = "INSERT INTO products (uid, product, filepath) VALUES (?, ?, ?)";
@@ -48,14 +52,20 @@ router.post("/products/update/:productId", verifyToken, upload.single("pic"), (r
     const uid = req.uid;
     const productId = req.params.productId;
     const updatedProduct = req.body.product;
-    const filepath = req.file.path;
+    const filepath = req.file ? req.file.path : null;
 
     if (!updatedProduct) {
         return res.status(400).json({ error: "Product is required in the request body" });
     }
 
-    const updateProductQuery = "UPDATE products SET product = ?, filepath = ? WHERE uid = ? AND pid = ?";
-    const values = [updatedProduct, filepath, uid, productId];
+    let updateProductQuery, values;
+    if (filepath) {
+        updateProductQuery = "UPDATE products SET product = ?, filepath = ? WHERE uid = ? AND pid = ?";
+        values = [updatedProduct, filepath, uid, productId];
+    } else {
+        updateProductQuery = "UPDATE products SET product = ? WHERE uid = ? AND pid = ?";
+        values = [updatedProduct, uid, productId];
+    }
 
     sqldb.query(updateProductQuery, values, (err, results) => {
         if (err) {
