@@ -19,7 +19,7 @@ const UserList = () => {
             setIsUpdate(true);
             setId(userId);
             setProductName(dt.product);
-            setImage();
+            setImage(null);
         }
     };
 
@@ -30,13 +30,14 @@ const UserList = () => {
             if (userId > 0) {
                 // Make API call to delete data
                 const authToken = Cookies.get('authToken');
-                const response = await fetch(`http://127.0.0.1:8000/products/delete/${userId}`, {
+                const response = await fetch(`http://127.0.0.1:8000/user/products/delete/${userId}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`,
                     },
                     body: JSON.stringify({
-                        authToken: authToken,
+                        
                     }),
                 });
     
@@ -62,15 +63,15 @@ const UserList = () => {
         e.preventDefault();
         
         const authToken = Cookies.get('authToken');
-        const apiUrl = 'http://127.0.0.1:8000/products/addnew';
+        const apiUrl = 'http://127.0.0.1:8000/user/products/addnew';
     
         fetch(apiUrl, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`,
             },
             body: JSON.stringify({
-                authToken: authToken,
                 product: product,
             }),
         })
@@ -92,13 +93,15 @@ const UserList = () => {
         // Make API call to update data
         const authToken = Cookies.get('authToken');
         
-        fetch(`http://127.0.0.1:8000/products/update/${id}`, {
+        fetch(`http://127.0.0.1:8000/user/products/update/${id}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'Authorization': `Bearer ${authToken}`,
+
             },
             body: JSON.stringify({
-                authToken: authToken,
+                
                 product: product,
             }),
         })
@@ -132,13 +135,15 @@ const UserList = () => {
             try {
                 const authToken = Cookies.get('authToken');
                  
-                const response = await fetch('http://127.0.0.1:8000/products', {
+                const response = await fetch('http://127.0.0.1:8000/user/products', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`,
+
                     },
                     body: JSON.stringify({
-                        authToken: authToken,
+                       
                     }),
                 });
                 
